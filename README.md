@@ -28,4 +28,4 @@ future == 0.18.2
 #### PS：The data cannot be made public due to non-disclosure agreements.
 
 Decision Tree:
-![image](https://github.com/czycurefun/RequirementDependency/blob/master/IMG/DT49.png)
+![image](https://github.com/lsplx/RequirementDependency/tree/master/IMG/DT49.png)
