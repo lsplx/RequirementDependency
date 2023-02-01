@@ -25,7 +25,7 @@ torchvision == 0.8.0
 en_core_web_sm == 2.2.5  
 future == 0.18.2  
 
-#### PS：The data cannot be made public due to non-disclosure agreements.
+#### PS：The datasets used in our study consists of two parts, i.e., dataset for requirements dependency identification and dataset for test case selection. The dataset for requirements dependency identification is given in the folder "data", while the dataset for test case selection is not public due to the confidence issue.
 
 Decision Tree:
 ![image](https://github.com/lsplx/RequirementDependency/blob/master/IMG/DT49.png)
