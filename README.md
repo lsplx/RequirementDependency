@@ -9,7 +9,8 @@ Run Requirements-Oriented Entity Extraction: phthon RequirementExtraction/app.py
 Run Requirements Dependency Identification: python predict.py
 
 # Models:  
-The Requirements-Oriented Entity Extraction Model: XXX  
+The Requirements-Oriented Entity Extraction Model:   
+url: https://pan.baidu.com/s/1LhYncGaG6-fA6o6fHkI1dg;  password: p5r8  
 The Mined Patterns for Requirements Dependency Identification: 
 ![image](https://github.com/lsplx/RequirementDependency/blob/master/IMG/DT49.png)
 
