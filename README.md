@@ -1,12 +1,19 @@
-predict.py is used for requirements dependency identification.  
-TestcaseExtraction is used for extracting entities.
+The respositiy is public package of the paper titled "Effective Test Case Selection via Requirements Dependency Identification in Function Regression Testing" submitted to ESEC/FSE 2023.
 
-# Usage
+Datasets:
+The datasets used in our study consists of two parts, i.e., dataset for requirements dependency identification and dataset for test case selection. 
+The dataset for requirements dependency identification is given in the folder "data", while the dataset for test case selection is not public due to the confidence issue.
 
-python app.py  
-python extractentity.py
+Scripts:
+Run Requirements-Oriented Entity Extraction: phthon RequirementExtraction/app.py
+Run Requirements Dependency Identification: python predict.py
 
-# Packages
+Models:
+The Requirements-Oriented Entity Extraction Model: XXX
+The Mined Patterns for Requirements Dependency Identification: 
+![image](https://github.com/lsplx/RequirementDependency/blob/master/IMG/DT49.png)
+
+The following gives the required package for running environment.
 
 python == 3.6.0  
 Jinja2 == 2.11.3  
@@ -24,8 +31,3 @@ pytorch-gpu == 1.7.0
 torchvision == 0.8.0  
 en_core_web_sm == 2.2.5  
 future == 0.18.2  
-
-#### PS：The datasets used in our study consists of two parts, i.e., dataset for requirements dependency identification and dataset for test case selection. The dataset for requirements dependency identification is given in the folder "data", while the dataset for test case selection is not public due to the confidence issue.
-
-Decision Tree:
-![image](https://github.com/lsplx/RequirementDependency/blob/master/IMG/DT49.png)
