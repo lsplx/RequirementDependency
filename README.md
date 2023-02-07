@@ -1,15 +1,15 @@
 The respositiy is public package of the paper titled "Effective Test Case Selection via Requirements Dependency Identification in Function Regression Testing" submitted to ESEC/FSE 2023.
 
 # Datasets:  
-The datasets used in our study consists of two parts, i.e., dataset for requirements dependency identification and dataset for test case selection. 
+The datasets used in our study consists of two parts, i.e., dataset for requirements dependency identification and dataset for test case selection.  
 The dataset for requirements dependency identification is given in the folder "data", while the dataset for test case selection is not public due to the confidence issue.
 
 # Scripts:  
-Run Requirements-Oriented Entity Extraction: phthon RequirementExtraction/app.py
+Run Requirements-Oriented Entity Extraction: phthon RequirementExtraction/app.py  
 Run Requirements Dependency Identification: python predict.py
 
 # Models:  
-The Requirements-Oriented Entity Extraction Model: XXX
+The Requirements-Oriented Entity Extraction Model: XXX  
 The Mined Patterns for Requirements Dependency Identification: 
 ![image](https://github.com/lsplx/RequirementDependency/blob/master/IMG/DT49.png)
 
