@@ -1,4 +1,4 @@
-The respositiy is public package of the paper titled "Effective Test Case Selection via Requirements Dependency Identification in Function Regression Testing" submitted to ICSE 2024.
+The respositiy is public package of the paper titled "Effective Test Case Selection via Requirements Dependency Identification in Function Regression Testing" submitted to ICSE 2024-second.
 
 # Datasets:  
 The datasets used in our study consists of two parts, i.e., dataset for requirements dependency identification and dataset for test case selection.  
