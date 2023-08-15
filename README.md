@@ -1,18 +1,12 @@
-The respositiy is public package of the paper titled "Effective Test Case Selection via Requirements Dependency Identification in Function Regression Testing" submitted to ICSE 2024-second.
+The respositiy is public package of the paper titled "Recognize Impacted Requirements via Fine-grained Dependency Identification in Functional Regression Testing" submitted to ICSE 2024-second.
 
 # Datasets:  
-The datasets used in our study consists of two parts, i.e., dataset for requirements dependency identification and dataset for test case selection.  
-The dataset for requirements dependency identification is given in the folder "data", while the dataset for test case selection is not public due to the confidence issue.
+The datasets used in our study consists of two parts, i.e., dataset for requirements dependency identification and dataset for impacted requirements recognition.  
+Some illustrative samples for requirements dependency identification is given in the folder "data", while the dataset for impacted requirements recognition is not public due to the confidentiality issue.
 
 # Scripts:  
-Run Requirements-Oriented Entity Extraction: phthon RequirementExtraction/app.py  
 Run Requirements Dependency Identification: python predict.py
 
-# Models:  
-The Requirements-Oriented Entity Extraction Model:   
-url: https://pan.baidu.com/s/1LhYncGaG6-fA6o6fHkI1dg;  password: p5r8  
-The Mined Patterns for Requirements Dependency Identification: 
-![image](https://github.com/lsplx/RequirementDependency/blob/master/IMG/DT49.png)
 
 The following gives the required package for running environment.  
 python == 3.6.0  
@@ -31,3 +25,4 @@ pytorch-gpu == 1.7.0
 torchvision == 0.8.0  
 en_core_web_sm == 2.2.5  
 future == 0.18.2  
+openai==0.27.0
