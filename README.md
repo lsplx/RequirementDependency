@@ -1,14 +1,14 @@
-The respositiy is public package of the paper titled "Recognize Impacted Requirements via Fine-grained Dependency Identification in Functional Regression Testing" submitted to ICSE 2024-second.
+The repository is the public package of the paper titled "Recognize Impacted Requirements via Fine-grained Dependency Identification in Functional Regression Testing" submitted to ICSE 2024-second.
 
-# Datasets:  
-The datasets used in our study consists of two parts, i.e., dataset for requirements dependency identification and dataset for impacted requirements recognition.  
-Some illustrative samples for requirements dependency identification is given in the folder "data", while the dataset for impacted requirements recognition is not public due to the confidentiality issue.
+# Datasets  
+The datasets used in our study consist of two parts, i.e., dataset for requirements dependency identification and dataset for impacted requirements recognition.  
+Some illustrative samples for requirements dependency identification are given in the folder "data", while the dataset for impacted requirements recognition is not public due to the confidentiality issue.
 
-# Scripts:  
+# Scripts
 Run Requirements Dependency Identification: python predict.py
 
 
-The following gives the required package for running environment.  
+The following gives the required package for the running environment.  
 python == 3.6.0  
 Jinja2 == 2.11.3  
 numpy == 1.17.4  
