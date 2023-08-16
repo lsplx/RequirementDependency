@@ -107,21 +107,17 @@ for row in df.itertuples(index=True):
 #抽取实体
 url = "http://0.0.0.0/api/EntityRelationEx/"
 headers = {'Content-Type': 'application/json'}
-# type_dic = {"agent": 1, "constraint": 2, "event": 3, "input": 4, "output": 5,  "operation": 6}
 typeveclist = []
 finaltypelist = []
 for newpair in Repair_list:
-    #1 agent, 2 operation, 3 constraint, 4 event, 5 input, 6 output
     typevec = []
     for num in range(0,27):
         typevec.append(0)
     #第一个text抽取
     response = information_extraction_with_gpt(newpair[0])
-    response = requests.post(url, data=data, headers=headers)
     result = response.json()
     #第二个text抽取
     response = information_extraction_with_gpt(newpair[1])
-    responsetwo = requests.post(url, data=datatwo, headers=headers)
     resulttwo = responsetwo.json()
     if (judgetype("meetcon",result[0]["entities"]) == True and judgetype("meetcon",resulttwo[0]["entities"]) == False) or (judgetype("meetcon",result[0]["entities"]) == False and judgetype("meetcon",resulttwo[0]["entities"]) == True):
         typevec[26] = 2
