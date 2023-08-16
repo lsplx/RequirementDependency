@@ -14,10 +14,39 @@ from sklearn.tree import DecisionTreeClassifier
 from matplotlib import pyplot as plt
 from sklearn import tree
 from pandas import DataFrame
-def string_similar(s1, s2):
-    return difflib.SequenceMatcher(None, s1, s2).quick_ratio()
+import openai
 
-def judgetype(entitytype,entitylist):
+
+# 定义用于与模型交互的API函数
+def information_extraction_with_gpt(prompt):
+    response = openai.Completion.create(
+        engine='gpt-3.5-turbo', # 或者使用'gpt-3.5-turbo'
+        prompt=prompt,
+        max_tokens=200,  # 设定生成的最大长度
+        temperature=0.7,  # 控制生成文本的随机程度
+        n=1,  # 生成的候选回复数量
+        stop=None,  # 可以使用特定的字符串停止回复生成
+        echo=True  # 回显输入的prompt
+    )
+
+    # 提取生成的回复
+    reply = response.choices[0].text.strip()
+    return reply
+
+
+def string_similar(s1, s2):
+    # 获取词向量
+    vectors = openai.Embed(list([word1, word2]))
+    # 提取词向量
+    vector1 = vectors['embeddings'][0]
+    vector2 = vectors['embeddings'][1]
+    # 计算余弦相似度
+    similarity = np.dot(vector1, vector2) / (np.linalg.norm(vector1) * np.linalg.norm(vector2))
+
+    return similarity
+
+
+def judgetype(entitytype, entitylist):
     flag = 0
     for entity in entitylist:
         if entitytype == entity["type"]:
@@ -39,7 +68,7 @@ requirement_des = []
 num = 0
 Redic = {}
 Repair_list = []
-# 0表示sim,1表示constraint，2表示precondition
+# 0-similar,1-Refines，2-Requires, 3-Change, 4-Conflict
 label_list = []
 for row in df.itertuples(index=True):
     row_list = list(row)
@@ -49,10 +78,15 @@ for row in df.itertuples(index=True):
     R2des = row_list[2:3]
     #similar
     similarlist = row_list[3:4]
-    #constraint
+    #refines
     constraintlist = row_list[4:5]
-    #precondition
+    #requires
     preconditionlist = row_list[5:6]
+    # change
+    change_list = row_list[6:7]
+    # conflict 
+    conflict_list = row_list[7:8]
+
     templist = []
     templist.append(R1des[0])
     templist.append(R2des[0])
@@ -63,14 +97,17 @@ for row in df.itertuples(index=True):
         label_list.append(1)
     elif preconditionlist[0] == 1:
         label_list.append(2)
-    else:
+    elif change_list[0] == 1:
+        label_list.append(3)
+    elif conflict_list[0] == 1:
         label_list.append(4)
-
+    else:
+        label_list.append(6)
 
 #抽取实体
 url = "http://0.0.0.0/api/EntityRelationEx/"
 headers = {'Content-Type': 'application/json'}
-type_dic = {"agent":1, "constraint":2, "event":3, "input":4, "output":5,  "operation":6}
+# type_dic = {"agent": 1, "constraint": 2, "event": 3, "input": 4, "output": 5,  "operation": 6}
 typeveclist = []
 finaltypelist = []
 for newpair in Repair_list:
@@ -79,32 +116,13 @@ for newpair in Repair_list:
     for num in range(0,27):
         typevec.append(0)
     #第一个text抽取
-    datas = {"text":newpair[0]}
-    data = json.dumps(datas)
+    response = information_extraction_with_gpt(newpair[0])
     response = requests.post(url, data=data, headers=headers)
     result = response.json()
     #第二个text抽取
-    datastwo = {"text":newpair[1]}
-    datatwo = json.dumps(datastwo)
+    response = information_extraction_with_gpt(newpair[1])
     responsetwo = requests.post(url, data=datatwo, headers=headers)
     resulttwo = responsetwo.json()
-    for entityone in result[0]["entities"]:
-        newentityone = entityone["value"].replace(" ","")
-        newentityone = newentityone.replace("准确率","")
-        for entitytwo in resulttwo[0]["entities"]:
-            newentitytwo = entitytwo["value"].replace(" ","")
-            newentitytwo = newentitytwo.replace("准确率","")
-            simscore = string_similar(newentityone,newentitytwo)
-            if (newentityone in newentitytwo) or (newentitytwo in newentityone) or simscore>0.8:
-                if (entityone["type"] == "operation" and entitytwo["type"] != "operation") or (entitytwo["type"] == "operation" and entityone["type"] != "operation"):
-                    continue
-                elif entityone["type"] == "operation" and entitytwo["type"] == "operation":
-                    typevec[25] = 1
-                elif entityone["type"] != "meetcon" and entitytwo["type"] != "meetcon":
-                    changenum = (type_dic[entityone["type"]] - 1) * 5 +  type_dic[entitytwo["type"]]
-                    typevec[changenum -1] = 1
-                else:
-                    typevec[26] = 1
     if (judgetype("meetcon",result[0]["entities"]) == True and judgetype("meetcon",resulttwo[0]["entities"]) == False) or (judgetype("meetcon",result[0]["entities"]) == False and judgetype("meetcon",resulttwo[0]["entities"]) == True):
         typevec[26] = 2
     typeveclist.append(typevec)
@@ -117,72 +135,6 @@ y = label_list
 # Fit the classifier with default hyper-parameters
 clf = joblib.load("D:/DTmodel.pkl")
 result = clf.predict(X)
-TP = 0
-TPsim = 0
-allsim = 0
-TPcon = 0
-allcon = 0
-TPpre = 0
-allpre = 0
-TPother = 0
-allother = 0
-#总的指标
-for num, each in enumerate(label_list) :
-    if each == 0:
-        allsim += 1
-    if each == 1:
-        allcon += 1
-    if each == 2:
-        allpre += 1
-    if each == 4:
-        allother += 1
-    if each == result[num]:
-        TP += 1
-    if each == 0 and each == result[num]:
-        TPsim += 1
-    if each == 1 and each == result[num]:
-        TPcon += 1
-    if each == 2 and each == result[num]:
-        TPpre += 1
-    if each == 4 and each == result[num]:
-        TPother += 1
-#算FP
-simFP = 0
-conFP = 0
-preFP = 0
-for num, each in enumerate(result) :
-    if each == 0 and label_list[num] != 0:
-        simFP += 1
-    if each == 1 and label_list[num] != 1:
-        conFP += 1
-    if each == 2 and label_list[num] != 2:
-        preFP += 1
-sumacc = TP/len(label_list)
-simPre = TPsim/(TPsim + simFP)
-conPre = TPcon/(TPcon + conFP)
-prePre = TPpre/(TPpre + preFP)
 
-simRecall = TPsim/allsim
-conRecall = TPcon/allcon
-preRecall = TPpre/allpre
-
-simF1 = 2*simPre*simRecall/(simPre+simRecall)
-conF1 = 2*conPre*conRecall/(conPre+conRecall)
-preF1 = 2*prePre*preRecall/(prePre+preRecall)
-otheracc = TPother/allother
-resultlist = []
-print("sumacc: " + str(sumacc))
-print("simPre: " + str(simPre) + ";" + " simRecall: " + str(simRecall) + ";" + " simF1: " + str(simF1))
-print("conPre: " + str(conPre) + ";" + " conRecall: " + str(conRecall) + ";" + " conF1: " + str(conF1))
-print("prePre: " + str(prePre) + ";" + " preRecall: " + str(preRecall) + ";" + " preF1: " + str(preF1))
-# print("conacc: " + str(conacc))
-# print("preacc: " + str(preacc))
-print("otheracc: " + str(otheracc))
-for num, each in enumerate(result) :
-    templist = []
-    templist.append(each)
-    templist.append(label_list[num])
-    resultlist.append(templist)
-
-df = DataFrame(resultlist,columns=["result","groundtruth"])
+df = DataFrame(resultlist, columns=["result","groundtruth"])
 df.to_excel('D:/result.xlsx', sheet_name='Sheet1', index=False)
