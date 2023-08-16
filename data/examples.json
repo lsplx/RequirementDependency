@@ -1,0 +1,15 @@
+{
+   "Ouput":{
+      "Entities": {
+         "agenet": "customer",
+         "behavior": "writing reviews, rating, querying ratings",
+         "component": "customer order",
+         "prerequisite": "after the delivery"
+      },
+      "Relations":[
+         "<customers, writing user comments, customer order, after the delivery>",
+         "<customers, rating, customer order, after the delivery>",
+         "<customers, querying delivery process, customer order, after the delivery>"
+      ]
+   }
+}
